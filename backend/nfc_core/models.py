@@ -10,5 +10,9 @@ class NFCTag(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        self.tag_id = self.tag_id.lower()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.tag_id} - {self.user_name}"

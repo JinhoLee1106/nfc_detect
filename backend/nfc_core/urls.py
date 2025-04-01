@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from .views import NFCTagListCreateView, NFCTagRetrieveUpdateDestroyView
 
 urlpatterns = [
-    path('tags/', views.NFCTagListCreateView.as_view(), name='nfc-tag-list-create'),
-    path('tags/<str:tag_id>/', views.NFCTagRetrieveUpdateDestroyView.as_view(), name='nfc-tag-detail'),
+    path('tags/', NFCTagListCreateView.as_view(), name='tag-list-create'),
+    path('tags/<str:tag_id>/', NFCTagRetrieveUpdateDestroyView.as_view(), name='tag-detail'),
 ]

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, TextInput, StyleSheet } from 'react-native';
 import NfcManager, { NfcTech } from 'react-native-nfc-manager';
+import { BACKEND_URL } from '@env';
 
 export default function App() {
   const [tagInfo, setTagInfo] = useState(null);
@@ -14,6 +15,7 @@ export default function App() {
   }, []);
 
   const readTag = async () => {
+    console.log('🌐 API URL:', process.env.BACKEND_URL);
     try {
       await NfcManager.requestTechnology(NfcTech.Ndef);
       const tag = await NfcManager.getTag();
@@ -25,7 +27,7 @@ export default function App() {
         return;
       }
 
-      const response = await fetch(`http://10.136.18.45:8000/api/tags/${tagId}/`);
+      const response = await fetch(`${BACKEND_URL}/api/tags/${tagId}/`);
 
       if (response.ok) {
         const data = await response.json();
@@ -34,7 +36,7 @@ export default function App() {
         setUserName(data.user_name);
         setUserRole(data.user_role);
       } else if (response.status === 404) {
-        const doubleCheck = await fetch(`http://10.136.18.45:8000/api/tags/${tagId}/`);
+        const doubleCheck = await fetch(`${BACKEND_URL}/api/tags/${tagId}/`);
           if (doubleCheck.ok) {
             const data = await doubleCheck.json();
             setTagInfo(data);
@@ -49,7 +51,7 @@ export default function App() {
           auth_hash: 'some_random_hash_here',
         };
 
-        const createResponse = await fetch(`http://10.136.18.45:8000/api/tags/`, {
+        const createResponse = await fetch(`${BACKEND_URL}/api/tags/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -87,7 +89,7 @@ export default function App() {
       user_role: userRole,
     };
 
-    const res = await fetch(`http://10.136.18.45:8000/api/tags/${tagInfo.tag_id}/`, {
+    const res = await fetch(`${BACKEND_URL}/api/tags/${tagInfo.tag_id}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +112,7 @@ export default function App() {
       return;
     }
 
-    const res = await fetch(`http://10.136.18.45:8000/api/tags/${tagInfo.tag_id}/`, {
+    const res = await fetch(`${BACKEND_URL}/api/tags/${tagInfo.tag_id}/`, {
       method: 'DELETE',
     });
 
